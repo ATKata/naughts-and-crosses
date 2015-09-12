@@ -1,15 +1,15 @@
 package naughtsandcrosses;
 
-        import org.junit.Before;
-        import org.junit.Test;
+import org.junit.Before;
+import org.junit.Test;
 
-        import static naughtsandcrosses.Position.*;
-        import static naughtsandcrosses.Status.IN_PROGRESS;
-        import static naughtsandcrosses.Status.WIN;
-        import static org.hamcrest.MatcherAssert.assertThat;
-        import static org.hamcrest.Matchers.equalTo;
-        import static org.junit.Assert.assertFalse;
-        import static org.junit.Assert.assertTrue;
+import static naughtsandcrosses.Position.*;
+import static naughtsandcrosses.Status.IN_PROGRESS;
+import static naughtsandcrosses.Status.WIN_NOUGHTS;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class GameTest {
     private Game game;
@@ -31,7 +31,7 @@ public class GameTest {
     }
 
     @Test
-    public void takeTurnTopLeftTwiceShouldNotBeAllowed(){
+    public void takeTurnTopLeftTwiceShouldNotBeAllowed() {
         game.takeTurn(TOP_LEFT);
         assertFalse(game.isValidTurn(TOP_LEFT));
     }
@@ -50,16 +50,25 @@ public class GameTest {
     }
 
     @Test
-    public void aRowOfOOOIsAWin() {
+    public void aTopRowOfOOOIsAWinForNoughts() {
         assertThat(game.takeTurn(TOP_LEFT), equalTo(IN_PROGRESS));
         assertThat(game.takeTurn(MIDDLE_LEFT), equalTo(IN_PROGRESS));
         assertThat(game.takeTurn(TOP_MIDDLE), equalTo(IN_PROGRESS));
         assertThat(game.takeTurn(MIDDLE), equalTo(IN_PROGRESS));
-        assertThat(game.takeTurn(TOP_RIGHT), equalTo(WIN));
+        assertThat(game.takeTurn(TOP_RIGHT), equalTo(WIN_NOUGHTS));
     }
 
     @Test
-    public void aRowOfOOXIsNotAWin() {
+    public void aMiddleRowofOOOIsAWinForNoughts(){
+        game.takeTurn(MIDDLE_LEFT);
+        game.takeTurn(TOP_LEFT);
+        game.takeTurn(MIDDLE);
+        game.takeTurn(TOP_MIDDLE);
+        assertThat(game.takeTurn(MIDDLE_RIGHT), equalTo(WIN_NOUGHTS));
+    }
+
+    @Test
+    public void aTopRowOfOOXIsNotAWin() {
         assertThat(game.takeTurn(TOP_LEFT), equalTo(IN_PROGRESS));
         assertThat(game.takeTurn(MIDDLE_LEFT), equalTo(IN_PROGRESS));
         assertThat(game.takeTurn(TOP_MIDDLE), equalTo(IN_PROGRESS));

@@ -3,5 +3,5 @@ package naughtsandcrosses;
 public enum Status {
     IN_PROGRESS,
     DRAW,
-    WIN
+    WIN_NOUGHTS
 }
