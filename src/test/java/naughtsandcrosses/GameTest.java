@@ -4,8 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static naughtsandcrosses.Position.*;
-import static naughtsandcrosses.Status.IN_PROGRESS;
-import static naughtsandcrosses.Status.WIN_NOUGHTS;
+import static naughtsandcrosses.Status.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertFalse;
@@ -51,11 +50,49 @@ public class GameTest {
 
     @Test
     public void aTopRowOfOOOIsAWinForNoughts() {
-        assertThat(game.takeTurn(TOP_LEFT), equalTo(IN_PROGRESS));
-        assertThat(game.takeTurn(MIDDLE_LEFT), equalTo(IN_PROGRESS));
-        assertThat(game.takeTurn(TOP_MIDDLE), equalTo(IN_PROGRESS));
-        assertThat(game.takeTurn(MIDDLE), equalTo(IN_PROGRESS));
+        game.takeTurn(TOP_LEFT);
+        game.takeTurn(MIDDLE_LEFT);
+        game.takeTurn(TOP_MIDDLE);
+        game.takeTurn(MIDDLE);
         assertThat(game.takeTurn(TOP_RIGHT), equalTo(WIN_NOUGHTS));
+    }
+
+    @Test
+    public void aLeftColumnOfOOOIsAWinForNoughts() {
+        game.takeTurn(TOP_LEFT);
+        game.takeTurn(TOP_MIDDLE);
+        game.takeTurn(MIDDLE_LEFT);
+        game.takeTurn(MIDDLE);
+        assertThat(game.takeTurn(BOTTOM_LEFT), equalTo(WIN_NOUGHTS));
+    }
+
+    @Test
+    public void aTopLeftToBottomRightDiagonalOfOOOIsAWinForNoughts() {
+        game.takeTurn(TOP_LEFT);
+        game.takeTurn(TOP_MIDDLE);
+        game.takeTurn(MIDDLE);
+        game.takeTurn(TOP_RIGHT);
+        assertThat(game.takeTurn(BOTTOM_RIGHT), equalTo(WIN_NOUGHTS));
+    }
+
+    @Test
+    public void aBttomLeftToTopRightDiagonalOfXXXIsAWinForCrosses() {
+        game.takeTurn(MIDDLE_LEFT);
+        game.takeTurn(BOTTOM_LEFT);
+        game.takeTurn(TOP_LEFT);
+        game.takeTurn(MIDDLE);
+        game.takeTurn(TOP_MIDDLE);
+        assertThat(game.takeTurn(TOP_RIGHT), equalTo(WIN_CROSSES));
+    }
+
+    @Test
+    public void aTopRowOfXXXIsAWinForCrosses() {
+        game.takeTurn(MIDDLE_LEFT);
+        game.takeTurn(TOP_LEFT);
+        game.takeTurn(MIDDLE);
+        game.takeTurn(TOP_MIDDLE);
+        game.takeTurn(BOTTOM_RIGHT);
+        assertThat(game.takeTurn(TOP_RIGHT), equalTo(WIN_CROSSES));
     }
 
     @Test
@@ -69,10 +106,24 @@ public class GameTest {
 
     @Test
     public void aTopRowOfOOXIsNotAWin() {
-        assertThat(game.takeTurn(TOP_LEFT), equalTo(IN_PROGRESS));
-        assertThat(game.takeTurn(MIDDLE_LEFT), equalTo(IN_PROGRESS));
-        assertThat(game.takeTurn(TOP_MIDDLE), equalTo(IN_PROGRESS));
-        assertThat(game.takeTurn(TOP_RIGHT), equalTo(IN_PROGRESS));
+        game.takeTurn(TOP_LEFT);
+        game.takeTurn(MIDDLE_LEFT);
+        game.takeTurn(TOP_MIDDLE);
+        game.takeTurn(TOP_RIGHT);
         assertThat(game.takeTurn(MIDDLE), equalTo(IN_PROGRESS));
+    }
+
+    @Test
+    public void nineTurnsWithoutThreeInARowIsADraw(){
+        game.takeTurn(TOP_LEFT);
+        game.takeTurn(TOP_MIDDLE);
+        game.takeTurn(TOP_RIGHT);
+        game.takeTurn(MIDDLE);
+        game.takeTurn(MIDDLE_LEFT);
+        game.takeTurn(MIDDLE_RIGHT);
+        game.takeTurn(BOTTOM_MIDDLE);
+        game.takeTurn(BOTTOM_LEFT);
+        assertThat(game.takeTurn(BOTTOM_RIGHT), equalTo(DRAW));
+
     }
 }
